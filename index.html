@@ -1,0 +1,43 @@
+
+<head>
+    <title>wasm playground</title>
+</head>
+
+<body>
+    <p>Gonna load some wasm code in this page!</p>
+    <p id="status_panel">Loading...</p>
+    <button onclick="takeRam()">Get RAM</button>
+    <button onclick="freeRam()">Free RAM</button>
+
+    <script type="module">
+      import hello_wasm_package from './pkg/hello_wasm.js';
+      import * as hello_wasm_instance from './pkg/hello_wasm.js';
+
+      window.hujlog = str => console.log('wasm: ' + str);
+
+      (async () => {
+        await hello_wasm_package();
+        document.getElementById('status_panel').textContent = 'Done executing, check console!';
+
+        const handles = [];
+        window.takeRam = () => {
+          const heapInst = hello_wasm_instance.Parent.new(512 * 1024 * 1024);
+          console.log('ololo ', heapInst.at(3));
+          console.log('ololo ', heapInst.at(4));
+          console.log('ololo ', heapInst.at(5));
+          console.log('ololo handle', heapInst);
+          console.log('ololo xor', heapInst.xor());
+          handles.push(heapInst);
+        };
+        window.freeRam = () => {
+          const handle = handles.pop();
+          if (!handle) {
+            alert('No more handles yopta');
+            return;
+          }
+          handle.free();
+          console.log('ololo handle freed', handle);
+        };
+      })();
+    </script>
+</body>
