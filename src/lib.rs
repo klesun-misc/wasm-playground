@@ -1,4 +1,8 @@
 use wasm_bindgen::prelude::*;
+// use fastrand;
+use rand::Rng;
+use std::panic;
+extern crate console_error_panic_hook;
 
 #[wasm_bindgen]
 extern {
@@ -24,6 +28,7 @@ pub fn rand_malloc(length: usize) -> usize {
     return handle as usize;
 }
 
+
 #[wasm_bindgen]
 pub fn free_by_address(address: usize) {
     let handle = address as *const Vec<u8>;
@@ -38,10 +43,13 @@ pub struct Parent {
 #[wasm_bindgen]
 impl Parent {
     pub fn new(length: usize) -> Self {
+        panic::set_hook(Box::new(console_error_panic_hook::hook));
         let mut arr: Vec<u8> = vec![0; length];
-        for i in 0..length {
-            std::mem::replace(&mut arr[i], 42);
-        }
+        // for i in 0..length {
+        //     // the doc says `high` is exclusive, but 256 is compile error =/
+        //     let value: u8 = fastrand::u8(0..255);
+        //     std::mem::replace(&mut arr[i], value);
+        // }
         Self { bytes: arr }
     }
 

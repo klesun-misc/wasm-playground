@@ -21,10 +21,11 @@
 
         const handles = [];
         window.takeRam = () => {
-          const heapInst = hello_wasm_instance.Parent.new(512 * 1024 * 1024);
+          const heapInst = hello_wasm_instance.Parent.new(4);
+          console.log('ololo ', heapInst.at(0));
+          console.log('ololo ', heapInst.at(1));
+          console.log('ololo ', heapInst.at(2));
           console.log('ololo ', heapInst.at(3));
-          console.log('ololo ', heapInst.at(4));
-          console.log('ololo ', heapInst.at(5));
           console.log('ololo handle', heapInst);
           console.log('ololo xor', heapInst.xor());
           handles.push(heapInst);
